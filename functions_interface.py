@@ -3,6 +3,7 @@ import math
 import pygame
 
 from functions_general import text_plate, display_text
+from knowledge_database import knowledge_database
 
 
 def interface_display(interface_mode, fonts, surface, images, noise, counter, person_list, genes_database, persons_database):
@@ -19,6 +20,7 @@ def interface_display(interface_mode, fonts, surface, images, noise, counter, pe
             '#007F7F',
             '#004A7F',
         ]
+        # 003500
         text_plate(surface, images, 600, 20, 720, 1002, '#003500', '#8ED7FF', 150, noise)
         line_v = pygame.Surface((2, 950))
         line_h = pygame.Surface((200, 2))
@@ -49,7 +51,7 @@ def interface_display(interface_mode, fonts, surface, images, noise, counter, pe
                     if g[:3] == marker:
                         gene_text1 = 0
                         gene_text2 = 0
-                        if g[-1:] == '+' or g[:1] == 'D':
+                        if True: # g[-1:] == '+' or g[:1] == 'D':
                             gene_text1 = 1
                             plate.fill(color_palette[genes_database[g[:4]]['dominant']])
                             plate.set_alpha(255)
@@ -64,13 +66,13 @@ def interface_display(interface_mode, fonts, surface, images, noise, counter, pe
                                 plate.fill('black')
                                 plate.set_alpha(150)
                                 surface.blit(plate, (751, cell_h - 9))
-                        else:
-                            plate.fill('black')
-                            plate.set_alpha(255)
-                            surface.blit(plate, (751, cell_h - 9))
-                            surface.blit(fonts['text_30'].render('???', True, 'black'), (775 + 1, cell_h + 1))
-                            surface.blit(fonts['text_30'].render('???', True, 'white'), (775, cell_h))
-                        if g2[-1:] == '+' or g2[:1] == 'D':
+                        # else:
+                        #     plate.fill('black')
+                        #     plate.set_alpha(255)
+                        #     surface.blit(plate, (751, cell_h - 9))
+                        #     surface.blit(fonts['text_30'].render('???', True, 'black'), (775 + 1, cell_h + 1))
+                        #     surface.blit(fonts['text_30'].render('???', True, 'white'), (775, cell_h))
+                        if True: # g2[-1:] == '+' or g2[:1] == 'D':
                             gene_text2 = 1
                             plate.fill(color_palette[genes_database[g2[:4]]['dominant']])
                             plate.set_alpha(255)
@@ -85,12 +87,12 @@ def interface_display(interface_mode, fonts, surface, images, noise, counter, pe
                                 plate.fill('black')
                                 plate.set_alpha(150)
                                 surface.blit(plate, (851, cell_h - 9))
-                        else:
-                            plate.fill('black')
-                            plate.set_alpha(255)
-                            surface.blit(plate, (851, cell_h - 9))
-                            surface.blit(fonts['text_30'].render('???', True, 'black'), (875 + 1, cell_h + 1))
-                            surface.blit(fonts['text_30'].render('???', True, 'white'), (875, cell_h))
+                        # else:
+                        #     plate.fill('black')
+                        #     plate.set_alpha(255)
+                        #     surface.blit(plate, (851, cell_h - 9))
+                        #     surface.blit(fonts['text_30'].render('???', True, 'black'), (875 + 1, cell_h + 1))
+                        #     surface.blit(fonts['text_30'].render('???', True, 'white'), (875, cell_h))
 
                         if (biggest == 1 or biggest == 3) and gene_text1 == 1:
                             display_text(genes_database[g[:4]]['name'], 300, surface, fonts['text_20'], 20, 980, cell_h + 5, 'white')
@@ -112,6 +114,135 @@ def interface_display(interface_mode, fonts, surface, images, noise, counter, pe
                 line = pygame.Surface((xx2 - xx1, 6))
                 line.fill('#8ED7FF')
                 surface.blit(line, (xx1, dna - 3))
+
+    elif interface_mode == 'traits':
+        text_plate(surface, images, 600, 20, 720, 1002, '#03193F', '#8ED7FF', 150, noise)
+
+    elif interface_mode == 'relations':
+        text_plate(surface, images, 600, 20, 720, 1002, '#03193F', '#8ED7FF', 150, noise)
+
+    elif interface_mode == 'knowledge':
+        text_plate(surface, images, 600, 20, 720, 1002, '#03193F', '#8ED7FF', 150, noise)
+        plate = pygame.Surface((198, 48))
+        common_knowledge = []
+        grade_1_knowledge = []
+        grade_2_knowledge = []
+        grade_3_knowledge = []
+        for k in persons_database[person_list]['knowledge']:
+            if knowledge_database[k]['rank'] == 0:
+                common_knowledge.append(k)
+            elif knowledge_database[k]['rank'] == 1:
+                grade_1_knowledge.append(k)
+            elif knowledge_database[k]['rank'] == 1:
+                grade_2_knowledge.append(k)
+            elif knowledge_database[k]['rank'] == 1:
+                grade_3_knowledge.append(k)
+
+        if persons_database[person_list]['caste'] == 0:
+            limit_1 = 6
+            limit_2 = 3
+            limit_3 = 1
+        elif persons_database[person_list]['caste'] == 1:
+            limit_1 = 4
+            limit_2 = 2
+            limit_3 = 0
+        elif persons_database[person_list]['caste'] == 2:
+            limit_1 = 2
+            limit_2 = 1
+            limit_3 = 0
+        elif persons_database[person_list]['caste'] == 3:
+            limit_1 = 1
+            limit_2 = 0
+            limit_3 = 0
+        else:
+            limit_1 = 3
+            limit_2 = 2
+            limit_3 = 0
+
+        dif = limit_1 - len(grade_1_knowledge)
+        if dif > 0:
+            for c in range(dif):
+                grade_1_knowledge.append('Свободный слот')
+        dif = limit_2 - len(grade_2_knowledge)
+        if dif > 0:
+            for c in range(dif):
+                grade_2_knowledge.append('Свободный слот')
+        dif = limit_3 - len(grade_3_knowledge)
+        if dif > 0:
+            for c in range(dif):
+                grade_3_knowledge.append('Свободный слот')
+
+        # Общие знания
+        cell_h = 60
+        cell_w = 660
+        display_text('Общие знания:', 300, surface, fonts['text_30'], 30, 630, cell_h, 'white')
+        cell_h += 60
+        for ck in common_knowledge:
+            plate.fill('#007F7F')
+            surface.blit(plate, (cell_w, cell_h))
+            display_text(ck, 180, surface, fonts['text_20'], 20, cell_w + 10, cell_h + 5, 'white')
+            cell_w += 200
+            if cell_w == 1260:
+                cell_w = 660
+                cell_h += 50
+
+        # Знания 1 уровня
+        if len(grade_1_knowledge) > 0:
+            cell_h += 80
+            cell_w = 660
+            display_text('Модули знания 1 уровня:', 300, surface, fonts['text_30'], 30, 630, cell_h, 'white')
+            cell_h += 60
+            for ck in grade_1_knowledge:
+                if ck == 'Свободный слот':
+                    plate.fill('grey')
+                else:
+                    plate.fill('#004A7F')
+                surface.blit(plate, (cell_w, cell_h))
+                display_text(ck, 180, surface, fonts['text_20'], 20, cell_w + 10, cell_h + 5, 'white')
+                cell_w += 200
+                if cell_w == 1260:
+                    cell_w = 660
+                    cell_h += 50
+
+        # Знания 2 уровня
+        if len(grade_2_knowledge) > 0:
+            cell_h += 80
+            cell_w = 660
+            display_text('Модули знания 2 уровня:', 300, surface, fonts['text_30'], 30, 630, cell_h, 'white')
+            cell_h += 60
+            for ck in grade_2_knowledge:
+                if ck == 'Свободный слот':
+                    plate.fill('grey')
+                else:
+                    plate.fill('#00137F')
+                surface.blit(plate, (cell_w, cell_h))
+                display_text(ck, 180, surface, fonts['text_20'], 20, cell_w + 10, cell_h + 5, 'white')
+                cell_w += 200
+                if cell_w == 1260:
+                    cell_w = 660
+                    cell_h += 50
+
+        # Знания 3 уровня
+        if len(grade_3_knowledge) > 0:
+            cell_h += 80
+            cell_w = 660
+            display_text('Модули знания 3 уровня:', 300, surface, fonts['text_30'], 30, 630, cell_h, 'white')
+            cell_h += 60
+            for ck in grade_3_knowledge:
+                if ck == 'Свободный слот':
+                    plate.fill('grey')
+                else:
+                    plate.fill('#21007F')
+                surface.blit(plate, (cell_w, cell_h))
+                display_text(ck, 180, surface, fonts['text_20'], 20, cell_w + 10, cell_h + 5, 'white')
+                cell_w += 200
+                if cell_w == 1260:
+                    cell_w = 660
+                    cell_h += 50
+
+
+    elif interface_mode == 'implants':
+        text_plate(surface, images, 600, 20, 720, 1002, '#03193F', '#8ED7FF', 150, noise)
 
     surface.blit(helper_screen, (0, 0))
 

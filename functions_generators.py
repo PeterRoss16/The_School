@@ -68,7 +68,12 @@ def person_generator(persons_database, planet, caste=2, age=0, parent1='', paren
                 for g in persons_database[parent1]['genes2']:
                     if g[:3] == marker:
                         g2 = g[:4]
-                if genes_database[g1]['dominant'] > genes_database[g2]['dominant']:
+                # if genes_database[g1]['dominant'] > genes_database[g2]['dominant']:
+                #     persons_database[new_person_index]['genes'].append(g1)
+                # else:
+                #     persons_database[new_person_index]['genes'].append(g2)
+                chance = random.randint(0,1)
+                if chance == 1:
                     persons_database[new_person_index]['genes'].append(g1)
                 else:
                     persons_database[new_person_index]['genes'].append(g2)
@@ -79,11 +84,16 @@ def person_generator(persons_database, planet, caste=2, age=0, parent1='', paren
                 for g in persons_database[parent2]['genes2']:
                     if g[:3] == marker:
                         g2 = g[:4]
-                if genes_database[g1]['dominant'] > genes_database[g2]['dominant']:
+                # if genes_database[g1]['dominant'] > genes_database[g2]['dominant']:
+                #     persons_database[new_person_index]['genes2'].append(g1)
+                # else:
+                #     persons_database[new_person_index]['genes2'].append(g2)
+                chance = random.randint(0,1)
+                if chance == 1:
                     persons_database[new_person_index]['genes2'].append(g1)
                 else:
                     persons_database[new_person_index]['genes2'].append(g2)
-        persons_database = random_mutations(persons_database, new_person_index, planet, 1, 3)
+        # persons_database = random_mutations(persons_database, new_person_index, planet, 1, 3)
 
     else:
         if caste == 0:
@@ -144,8 +154,35 @@ def person_generator(persons_database, planet, caste=2, age=0, parent1='', paren
 
                 marker = ''
                 gene_pool = []
+        if persons_database[new_person_index]['caste'] != 3 or random.randint(0, 30) == 5:
+            persons_database[new_person_index]['knowledge'].append('Универсальный язык')
+        if persons_database[new_person_index]['caste'] <= 1 or random.randint(0, 15) == 5:
+            persons_database[new_person_index]['knowledge'].append('Этикет высшего общества')
+        if persons_database[new_person_index]['home_planet'] == 'Иден' or random.randint(0, 10) == 5:
+            persons_database[new_person_index]['knowledge'].append('Язык и культура Идена')
+        if persons_database[new_person_index]['home_planet'] == 'Саламанка' or random.randint(0, 10) == 5:
+            persons_database[new_person_index]['knowledge'].append('Язык и культура Саламанки')
+        if age >= 16:
+            if persons_database[new_person_index]['caste'] != 3 or random.randint(0, 20) == 5:
+                persons_database[new_person_index]['knowledge'].append('Общее образование')
+        if age >= 25:
+            if persons_database[new_person_index]['caste'] < 3 or random.randint(0, 35) == 5:
+                persons_database[new_person_index]['knowledge'].append('Образование 2 уровня')
+            if persons_database[new_person_index]['caste'] < 3:
+                knowledge_pool = []
+                for k in knowledge_database:
+                    if knowledge_database[k]['rank'] == 1:
+                        knowledge_pool.append(k)
+                chance = random.randint(-5, len(knowledge_pool) - 1)
+                if chance >= 0:
+                    persons_database[new_person_index]['knowledge'].append(knowledge_pool[chance])
+                    del knowledge_pool[chance]
+                if age >= 35:
+                    chance = random.randint(-5, len(knowledge_pool) - 1)
+                    if chance >= 0:
+                        persons_database[new_person_index]['knowledge'].append(knowledge_pool[chance])
 
-        persons_database = random_mutations(persons_database, new_person_index, planet)
+        # persons_database = random_mutations(persons_database, new_person_index, planet)
 
     persons_database[new_person_index]['health'] = random.randint(40, 100) - (persons_database[new_person_index]['caste'] * 10)
     if persons_database[new_person_index]['health'] < 20:
@@ -154,9 +191,15 @@ def person_generator(persons_database, planet, caste=2, age=0, parent1='', paren
     persons_database[new_person_index]['age'] = age
 
     if educated != 0:
+        if 'Общее образование' not in persons_database[new_person_index]['knowledge']:
+            persons_database[new_person_index]['knowledge'].append('Общее образование')
+        if 'Образование 2 уровня' not in persons_database[new_person_index]['knowledge']:
+            chance = random.randint(-5, 5)
+            if chance >= persons_database[new_person_index]['caste']:
+                persons_database[new_person_index]['knowledge'].append('Образование 2 уровня')
         knowledge_pool = []
         for k in knowledge_database:
-            if knowledge_database[k]['rank'] <= educated:
+            if 0 < knowledge_database[k]['rank'] <= educated:
                 knowledge_pool.append(k)
         limit = educated
         while True:
