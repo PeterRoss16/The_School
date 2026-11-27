@@ -50,7 +50,7 @@ def text_plate(surface, images, x, y, width, height, color='#E0CFB1', color_line
     return
 
 
-def display_text(input_text, width, surface, text_font, font_size, x, y, color, upper=0, strings=0, centered=False):
+def display_text(input_text, width, surface, text_font, font_size, x, y, color, centered=False, upper=0, strings=0):
     input_text_ = input_text.split(' ')
     result_text = ['']
     j = 0
@@ -67,12 +67,11 @@ def display_text(input_text, width, surface, text_font, font_size, x, y, color, 
         if t[:1] == ' ':
             t = t[1:]
         if centered:
-            xx = width - text_font.size(t)[0]
-            while xx > 0:
-                t = ' ' + t
-                xx -= 1
-        surface.blit(text_font.render(t, True, 'black'), (x + 1, (y + 1 + i * font_size)))
-        surface.blit(text_font.render(t, True, color), (x, (y + i * font_size)))
+            txt_shift = int((width - text_font.size(t)[0])/2)
+        else:
+            txt_shift = 0
+        surface.blit(text_font.render(t, True, 'black'), (x + 1 - txt_shift, (y + 1 + i * font_size)))
+        surface.blit(text_font.render(t, True, color), (x - txt_shift, (y + i * font_size)))
         i += 1
     return upper
 
