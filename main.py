@@ -124,9 +124,9 @@ while True:
     # Кнопка
     interface_mode = create_button('Генетика', interface_mode, 'genetics', 355, 50, 180, 60, fonts['text_30'], surface, control_click, color='#03193F', color_line='#8ED7FF', alpha=150)
     interface_mode = create_button('Качества', interface_mode, 'traits', 355, 115, 180, 60, fonts['text_30'], surface, control_click, color='#03193F', color_line='#8ED7FF', alpha=150)
-    interface_mode = create_button('Отношения', interface_mode, 'relations', 355, 180, 180, 60, fonts['text_30'], surface, control_click, color='#03193F', color_line='#8ED7FF', alpha=150)
-    interface_mode = create_button('Знания', interface_mode, 'knowledge', 355, 245, 180, 60, fonts['text_30'], surface, control_click, color='#03193F', color_line='#8ED7FF', alpha=150)
-    interface_mode = create_button('Импланты', interface_mode, 'implants', 355, 310, 180, 60, fonts['text_30'], surface, control_click, color='#03193F', color_line='#8ED7FF', alpha=150)
+    interface_mode = create_button('Знания', interface_mode, 'knowledge', 355, 180, 180, 60, fonts['text_30'], surface, control_click, color='#03193F', color_line='#8ED7FF', alpha=150)
+    interface_mode = create_button('Импланты', interface_mode, 'implants', 355, 245, 180, 60, fonts['text_30'], surface, control_click, color='#03193F', color_line='#8ED7FF', alpha=150)
+    interface_mode = create_button('Отношения', interface_mode, 'relations', 355, 310, 180, 60, fonts['text_30'], surface, control_click, color='#03193F', color_line='#8ED7FF', alpha=150)
 
     interface_display(interface_mode, fonts, surface, images, noise, counter, person_list, genes_database, persons_database)
 

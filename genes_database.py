@@ -32,7 +32,7 @@ genes_database = {
         'noncom': [],
         'property': 'intellect',
         'value': 12,
-        'dominant': 1,
+        'dominant': 3,
     },
     'A2A2': {
         'name': 'Низкий интеллект',
@@ -40,6 +40,20 @@ genes_database = {
         'property': 'intellect',
         'value': 6,
         'dominant': 6,
+    },
+    'A2A3': {
+        'name': 'Гениальность',
+        'noncom': [],
+        'property': 'intellect',
+        'value': 6,
+        'dominant': 1,
+    },
+    'A2A4': {
+        'name': 'Идиотизм',
+        'noncom': [],
+        'property': 'intellect',
+        'value': 6,
+        'dominant': 2,
     },
     'B1A0': {
         'name': 'Средняя агрессивность',
@@ -278,6 +292,13 @@ genes_database = {
         'property': 'type',
         'value': 'h4',
         'dominant': 6,
+    },
+    'D4A5': {
+        'name': 'Красная кожа',
+        'noncom': [],
+        'property': 'type',
+        'value': 'h4',
+        'dominant': 2,
     },
     'D5A0': {
         'name': 'Нормальная комплекция',

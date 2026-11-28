@@ -3,7 +3,7 @@ import random
 import pygame
 
 from genes_database import genes_database
-from knowledge_database import knowledge_database
+from knowledge_database import knowledge_database, knowledge_caste_allowance
 from names_database import male_names_database, female_names_database, surnames_database, nobles_database
 from planet_database import planet_database
 
@@ -19,7 +19,10 @@ def person_generator(persons_database, planet, caste=2, age=0, parent1='', paren
     persons_database[new_person_index]['genes'] = []
     persons_database[new_person_index]['genes2'] = []
     persons_database[new_person_index]['implants'] = []
-    persons_database[new_person_index]['knowledge'] = []
+    persons_database[new_person_index]['knowledge_0'] = {}
+    persons_database[new_person_index]['knowledge_1'] = []
+    persons_database[new_person_index]['knowledge_2'] = []
+    persons_database[new_person_index]['knowledge_3'] = []
     persons_database[new_person_index]['gender'] = random.randint(0, 1)
     persons_database[new_person_index]['home_planet'] = planet
     if persons_database[new_person_index]['gender'] == 0:
@@ -155,19 +158,19 @@ def person_generator(persons_database, planet, caste=2, age=0, parent1='', paren
                 marker = ''
                 gene_pool = []
         if persons_database[new_person_index]['caste'] != 3 or random.randint(0, 30) == 5:
-            persons_database[new_person_index]['knowledge'].append('Универсальный язык')
+            persons_database[new_person_index]['knowledge_0']['Универсальный язык'] = random.randint(85, 120)
         if persons_database[new_person_index]['caste'] <= 1 or random.randint(0, 15) == 5:
-            persons_database[new_person_index]['knowledge'].append('Этикет высшего общества')
+            persons_database[new_person_index]['knowledge_0']['Этикет высшего общества'] = random.randint(65, 120)
         if persons_database[new_person_index]['home_planet'] == 'Иден' or random.randint(0, 10) == 5:
-            persons_database[new_person_index]['knowledge'].append('Язык и культура Идена')
+            persons_database[new_person_index]['knowledge_0']['Язык и культура Идена'] = random.randint(85, 120)
         if persons_database[new_person_index]['home_planet'] == 'Саламанка' or random.randint(0, 10) == 5:
-            persons_database[new_person_index]['knowledge'].append('Язык и культура Саламанки')
-        if age >= 16:
+            persons_database[new_person_index]['knowledge_0']['Язык и культура Саламанки'] = random.randint(85, 120)
+        if age >= 12:
             if persons_database[new_person_index]['caste'] != 3 or random.randint(0, 20) == 5:
-                persons_database[new_person_index]['knowledge'].append('Общее образование')
+                persons_database[new_person_index]['knowledge_0']['Общее образование'] = random.randint(min(age * 2, 100), 120)
         if age >= 25:
             if persons_database[new_person_index]['caste'] < 3 or random.randint(0, 35) == 5:
-                persons_database[new_person_index]['knowledge'].append('Образование 2 уровня')
+                persons_database[new_person_index]['knowledge_0']['Образование 2 уровня'] = random.randint(45, 100)
             if persons_database[new_person_index]['caste'] < 3:
                 knowledge_pool = []
                 for k in knowledge_database:
@@ -175,14 +178,14 @@ def person_generator(persons_database, planet, caste=2, age=0, parent1='', paren
                         knowledge_pool.append(k)
                 chance = random.randint(-5, len(knowledge_pool) - 1)
                 if chance >= 0:
-                    persons_database[new_person_index]['knowledge'].append(knowledge_pool[chance])
+                    persons_database[new_person_index]['knowledge_1'].append(knowledge_pool[chance])
                     del knowledge_pool[chance]
                 if age >= 35:
                     chance = random.randint(-5, len(knowledge_pool) - 1)
                     if chance >= 0:
-                        persons_database[new_person_index]['knowledge'].append(knowledge_pool[chance])
+                        persons_database[new_person_index]['knowledge_1'].append(knowledge_pool[chance])
 
-        # persons_database = random_mutations(persons_database, new_person_index, planet)
+        persons_database = random_mutations(persons_database, new_person_index, planet)
 
     persons_database[new_person_index]['health'] = random.randint(40, 100) - (persons_database[new_person_index]['caste'] * 10)
     if persons_database[new_person_index]['health'] < 20:
@@ -191,12 +194,12 @@ def person_generator(persons_database, planet, caste=2, age=0, parent1='', paren
     persons_database[new_person_index]['age'] = age
 
     if educated != 0:
-        if 'Общее образование' not in persons_database[new_person_index]['knowledge']:
-            persons_database[new_person_index]['knowledge'].append('Общее образование')
-        if 'Образование 2 уровня' not in persons_database[new_person_index]['knowledge']:
+        if 'Общее образование' not in persons_database[new_person_index]['knowledge_0']:
+            persons_database[new_person_index]['knowledge_0']['Общее образование'] = 100
+        if 'Образование 2 уровня' not in persons_database[new_person_index]['knowledge_0']:
             chance = random.randint(-5, 5)
             if chance >= persons_database[new_person_index]['caste']:
-                persons_database[new_person_index]['knowledge'].append('Образование 2 уровня')
+                persons_database[new_person_index]['knowledge_0']['Образование 2 уровня'] = random.randint(65, 120)
         knowledge_pool = []
         for k in knowledge_database:
             if 0 < knowledge_database[k]['rank'] <= educated:
@@ -204,7 +207,8 @@ def person_generator(persons_database, planet, caste=2, age=0, parent1='', paren
         limit = educated
         while True:
             chance = random.randint(0, len(knowledge_pool) - 1)
-            persons_database[new_person_index]['knowledge'].append(knowledge_pool[chance])
+            if len(persons_database[new_person_index]['knowledge_' + str(knowledge_database[knowledge_pool[chance]]['rank'])]) <= knowledge_caste_allowance[persons_database[new_person_index]['caste']][knowledge_database[knowledge_pool[chance]]['rank']]:
+                persons_database[new_person_index]['knowledge_' + str(knowledge_database[knowledge_pool[chance]]['rank'])].append(knowledge_pool[chance])
             del knowledge_pool[chance]
             limit -= 1
             if limit <= 0:
@@ -329,8 +333,8 @@ def person_data(person_list, persons_database, person_info=''):
 
 
 def person_ava(person_list, persons_database, images):
-    ava = pygame.Surface((300, 600))
-    ava.fill('white')
+    ava = pygame.Surface((300, 600), pygame.SRCALPHA)
+    # ava.fill('white')
     prompt = ''
     subject = persons_database[person_list]
 
@@ -383,8 +387,8 @@ def person_ava(person_list, persons_database, images):
         prompt += 'tn'
     elif fat_gene == 'D5A2':
         prompt += 'tk'
-    prompt += '1'
-    file = pygame.image.load("images/avatars/" + prompt + ".png").convert_alpha()
+    folder = 'body_' + str(subject['caste'])
+    file = pygame.image.load("images/avatars/" + folder + '/' + prompt + ".png").convert_alpha()
     ava.blit(file, (0, 0))
 
     # Лицо
@@ -413,8 +417,8 @@ def person_ava(person_list, persons_database, images):
         prompt += 'bl'
     elif face_gene == 'D4A4':
         prompt += 'gr'
-    else:
-        prompt += 'wh'
+    elif face_gene == 'D4A5':
+        prompt += 're'
     prompt += 'me'
     prompt += '1'
     file = pygame.image.load("images/avatars/" + prompt + ".png").convert_alpha()
